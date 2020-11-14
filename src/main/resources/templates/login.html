@@ -1,0 +1,31 @@
+<html lang="en" xmlns:th = "http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/main.html">
+
+<div layout:fragment="site_content">
+    <div class="row mt-5">
+        <div class="col-6 offset-3">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if = "${param.error!=null}">
+                <span>Неправильный адрес электронной почты или пароль!</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form th:action="@{'/auth'}" method="post">
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" class="form-control" name="u_email">
+                </div>
+                <div class="form-group">
+                    <label>Пароль</label>
+                    <input type="password" class="form-control" name="u_password">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success">Войти</button>
+                </div>
+            </form>
+            <p>Нет аккаунта? <a type="button" th:href="@{'/register'}">Регистрируйтесь здесь</a></p>
+        </div>
+    </div>
+</div>
+</html>

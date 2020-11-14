@@ -1,0 +1,24 @@
+<html lang="en" xmlns:th = "http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/main.html">
+
+    <div class="container" layout:fragment="site_content">
+        <div class="row mt-5">
+            <div class="col-sm-12">
+                    <input type="hidden" name="id" th:value="${currentgood!=null?currentgood.id:''}">
+                <h1 class="display-4" th:text="${currentgood.name}"></h1>
+                <div class="d-flex p-2 bd-highlight">
+                <img th:src="${currentgood.urlOfPicture}" class="rounded mx-auto d-block" width="30%" height="30%">
+                <div class="jumbotron ml-3">
+                    <p class="lead font-weight-bold" th:text="${currentgood.price} + 'KZT' + ' - В наличии '+ ${currentgood.amount} + ' штук'"></p>
+                    <hr class="my-4">
+                    <p th:text="${currentgood.description}"></p>
+                    <a class="btn btn-success btn-lg" href="JavaScript:void(0)" role="button">В корзину</a>
+
+                </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+</html>

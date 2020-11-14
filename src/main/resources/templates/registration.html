@@ -1,0 +1,50 @@
+<html lang="en" xmlns:th = "http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/main.html">
+
+<div layout:fragment="site_content">
+    <div class="row mt-5">
+        <div class="col-6 offset-3">
+            <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${param.success!=null}">
+                <span>Пользователь зарегистрирован успешно!</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${param.passerror!=null}">
+                <span>Пароли не совпадают!</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${param.error!=null}">
+                <span>Пользователь с таким именем уже существует!</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form th:action="@{'/register'}" method="post">
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" class="form-control" name="email">
+                </div>
+                <div class="form-group">
+                    <label>Пароль</label>
+                    <input type="password" class="form-control" name="password">
+                </div>
+                <div class="form-group">
+                    <label>Подтвердите пароль</label>
+                    <input type="password" class="form-control" name="re_password">
+                </div>
+                <div class="form-group">
+                    <label>ФИО</label>
+                    <input type="text" class="form-control" name="fullName">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success">Зарегистрироваться</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</html>
