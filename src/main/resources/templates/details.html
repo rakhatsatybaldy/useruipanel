@@ -1,5 +1,6 @@
 <html lang="en" xmlns:th = "http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorator="layout/main.html">
 
     <div class="container" layout:fragment="site_content">
@@ -13,8 +14,7 @@
                     <p class="lead font-weight-bold" th:text="${currentgood.price} + 'KZT' + ' - В наличии '+ ${currentgood.amount} + ' штук'"></p>
                     <hr class="my-4">
                     <p th:text="${currentgood.description}"></p>
-                    <a class="btn btn-success btn-lg" href="JavaScript:void(0)" role="button">В корзину</a>
-
+                    <a class="btn btn-success btn-lg" href="JavaScript:void(0)" role="button" sec:authorize="isAuthenticated()">В корзину</a>
                 </div>
                 </div>
                 </div>
