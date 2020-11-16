@@ -40,3 +40,9 @@ INSERT INTO goods_categories(goods_good_id , categories_id) VALUES (11 , 4);
 INSERT INTO goods_categories(goods_good_id , categories_id) VALUES (12 , 4);
 
 INSERT INTO roles (role_id , role_name , role_description) VALUES (1 , 'ROLE_USER' , 'DEFAULT ROLE FOR ALL USERS');
+
+INSERT INTO cities(city_id , city_name) VALUES (nextval('cities_city_id_seq') , 'Алматы');
+INSERT INTO cities(city_id , city_name) VALUES (nextval('cities_city_id_seq') , 'Шымкент');
+INSERT INTO cities(city_id , city_name) VALUES (nextval('cities_city_id_seq') , 'Нур-Султан');
+INSERT INTO cities(city_id , city_name) VALUES (nextval('cities_city_id_seq') , 'Караганда');
+INSERT INTO cities(city_id , city_name) VALUES (nextval('cities_city_id_seq') , 'Павлодар');

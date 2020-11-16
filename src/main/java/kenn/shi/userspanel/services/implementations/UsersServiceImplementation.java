@@ -1,7 +1,9 @@
 package kenn.shi.userspanel.services.implementations;
 
+import kenn.shi.userspanel.entities.Cities;
 import kenn.shi.userspanel.entities.Roles;
 import kenn.shi.userspanel.entities.Users;
+import kenn.shi.userspanel.repositories.CitiesRepository;
 import kenn.shi.userspanel.repositories.RolesRepository;
 import kenn.shi.userspanel.repositories.UsersRepository;
 import kenn.shi.userspanel.services.UsersService;
@@ -24,6 +26,9 @@ public class UsersServiceImplementation implements UsersService {
     @Autowired
     private RolesRepository rolesRepository;
 
+    @Autowired
+    private CitiesRepository citiesRepository;
+
     @Override
     public Users getUserByEmail(String email) {
         return usersRepository.findByEmail(email);
@@ -41,6 +46,21 @@ public class UsersServiceImplementation implements UsersService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Cities> getAllCities() {
+        return citiesRepository.findAll();
+    }
+
+    @Override
+    public Cities getCity(Long id) {
+        return citiesRepository.getOne(id);
+    }
+
+    @Override
+    public Users saveUser(Users user) {
+        return usersRepository.save(user);
     }
 
     @Override

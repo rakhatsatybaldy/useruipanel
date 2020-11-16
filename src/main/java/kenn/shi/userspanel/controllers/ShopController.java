@@ -1,12 +1,10 @@
 package kenn.shi.userspanel.controllers;
 
-import kenn.shi.userspanel.entities.Categories;
-import kenn.shi.userspanel.entities.Goods;
-import kenn.shi.userspanel.entities.Roles;
-import kenn.shi.userspanel.entities.Users;
+import kenn.shi.userspanel.entities.*;
 import kenn.shi.userspanel.repositories.RolesRepository;
 import kenn.shi.userspanel.services.GoodsService;
 import kenn.shi.userspanel.services.UsersService;
+import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -94,9 +92,13 @@ public class ShopController {
         return "403";
     }
 
+
+
     @GetMapping(value = "/register")
     public String register(Model model){
         model.addAttribute("currentUser" , getUser());
+        List<Cities> cities = usersService.getAllCities();
+        model.addAttribute("cities" , cities);
         return "registration";
     }
 
@@ -104,13 +106,18 @@ public class ShopController {
     public String toRegister(@RequestParam(name = "email")String email,
                              @RequestParam(name = "password")String password,
                              @RequestParam(name = "re_password")String rePassword,
-                             @RequestParam(name = "fullName")String fullName , Model model){
+                             @RequestParam(name = "fullName")String fullName ,
+                             @RequestParam(name = "city_id")Long id , Model model){
         model.addAttribute("currentUser" , getUser());
+        List<Cities> cities = usersService.getAllCities();
+        model.addAttribute("cities" , cities);
         if (password.equals(rePassword)){
+            Cities city = usersService.getCity(id);
             Users newUser = new Users();
             newUser.setEmail(email);
             newUser.setPassword(passwordEncoder.encode(password));
             newUser.setFullName(fullName);
+            newUser.setCity(city);
             if (usersService.addNewUser(newUser)){
                 return "redirect:/register?success";
             }
@@ -125,7 +132,27 @@ public class ShopController {
     @PreAuthorize("isAuthenticated()")
     public String profile(Model model){
         model.addAttribute("currentUser" , getUser());
+        List<Cities> cities = usersService.getAllCities();
+        model.addAttribute("cities" , cities);
         return "profile";
+    }
+
+    @PostMapping(value = "/updateInfoAboutUser")
+    @PreAuthorize("isAuthenticated()")
+    public String updateProfile(Model model ,  @RequestParam(name = "fullName")String fullName,
+                                @RequestParam(name = "address")String address,
+                                @RequestParam(name = "city_id")Long id){
+        model.addAttribute("currentUser" , getUser());
+        Cities city = usersService.getCity(id);
+        if (city!=null){
+            getUser().setFullName(fullName);
+            getUser().setCity(city);
+            getUser().setAddress(address);
+            usersService.saveUser(getUser());
+            return "redirect:/profile?success";
+        }else {
+            return "redirect:/profile?error";
+        }
     }
 
 

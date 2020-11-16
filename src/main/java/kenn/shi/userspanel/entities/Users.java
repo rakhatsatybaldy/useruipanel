@@ -28,6 +28,12 @@ public class Users {
     @Column(name = "user_full_name")
     private String fullName;
 
+    @Column(name = "user_address")
+    private String address;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Cities city;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Roles> roles;
 
