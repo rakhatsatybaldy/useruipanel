@@ -31,7 +31,7 @@ public class GoodsServiceImplementation implements GoodsService {
 
     @Override
     public List<Goods> searchShopGoods(String name) {
-        return goodsRepository.findAllByNameLike("%"+name+"%");
+        return goodsRepository.findAllByNameLike(name);
     }
 
     @Override
