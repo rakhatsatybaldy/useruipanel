@@ -34,6 +34,9 @@ public class Users {
     @ManyToOne(fetch = FetchType.EAGER)
     private Cities city;
 
+    @Column(name = "balance")
+    private double balance;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Roles> roles;
 
