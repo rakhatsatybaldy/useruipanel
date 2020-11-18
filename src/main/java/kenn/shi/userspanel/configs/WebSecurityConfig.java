@@ -15,10 +15,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true , proxyTargetClass = true , securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+
     @Autowired
     private UsersService usersService;
-
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
