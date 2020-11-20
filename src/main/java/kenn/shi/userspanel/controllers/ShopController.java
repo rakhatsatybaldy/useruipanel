@@ -119,16 +119,26 @@ public class ShopController {
         return "redirect:/";
     }
 
+    @PostMapping(value = "/deletegoodfrombasket")
+    public String deletegoodfrombasket(@RequestParam(name = "g_id")Long good_id){
+        Goods good = goodsService.getGood(good_id);
+        if (good!=null){
+            List<Goods> basket = (ArrayList<Goods>) session.getAttribute("BASKET");
+            basket.remove(good);
+            session.setAttribute("BASKET" , basket);
+            return "redirect:/basketlist#tableid";
+        }
+        return "redirect:/";
+    }
+
     @GetMapping(value = "/basketlist")
     public String basketList(Model model){
         model.addAttribute("basketSize"  , countGoodsInBasket());
         model.addAttribute("currentUser" , getUser());
-        ArrayList<Goods> korzina = (ArrayList<Goods>) session.getAttribute("BASKET");
+        List<Goods> korzina = (ArrayList<Goods>) session.getAttribute("BASKET");
         model.addAttribute("korzina" , korzina);
         return "basketlist";
     }
-
-
 
     @GetMapping(value = "/register")
     public String register(Model model){
