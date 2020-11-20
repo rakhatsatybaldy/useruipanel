@@ -14,7 +14,10 @@
                     <p class="lead font-weight-bold" th:text="${currentgood.price} + 'KZT' + ' - В наличии '+ ${currentgood.amount} + ' штук'"></p>
                     <hr class="my-4">
                     <p th:text="${currentgood.description}"></p>
-                    <a class="btn btn-success btn-lg" href="JavaScript:void(0)" role="button" sec:authorize="isAuthenticated()">В корзину</a>
+                    <form th:action="@{'/addtobasket'}" method="post">
+                        <input type="hidden" name="good_id" th:value="${currentgood.id}">
+                        <button class="btn btn-success"> + В корзину</button>
+                    </form>
                 </div>
                 </div>
                 </div>

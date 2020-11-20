@@ -37,6 +37,9 @@ public class Users {
     @Column(name = "balance")
     private double balance;
 
+    @Column(name = "blocked")
+    private boolean blocked;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Roles> roles;
 

@@ -42,6 +42,7 @@ public class UsersServiceImplementation implements UsersService {
         roles.add(role);
         if (checkUser==null){
             users.setRoles(roles);
+            users.setBlocked(false);
             usersRepository.save(users);
             return true;
         }
@@ -65,7 +66,7 @@ public class UsersServiceImplementation implements UsersService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        Users myUser = usersRepository.findByEmail(s);
+        Users myUser = usersRepository.findByEmailAndBlocked(s , false);
         if (myUser!=null){
             User securityUser =new User(myUser.getEmail() , myUser.getPassword(),  myUser.getRoles());
             return securityUser;

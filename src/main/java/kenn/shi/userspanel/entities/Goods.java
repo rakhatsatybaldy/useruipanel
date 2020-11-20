@@ -30,9 +30,11 @@ public class Goods {
     @Column(name = "amount")
     private int amount;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Categories> categories;
 
     @Column(name = "picture")
     private String urlOfPicture;
+
+
 }

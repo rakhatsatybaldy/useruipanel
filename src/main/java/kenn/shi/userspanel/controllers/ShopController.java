@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -33,8 +35,12 @@ public class ShopController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private HttpSession session;
+
     @GetMapping(value = "/")
     public String home(Model model){
+        model.addAttribute("basketSize"  , countGoodsInBasket());
         model.addAttribute("currentUser" , getUser());
         List<Goods> goods = goodsService.getAllShopGoods();
         model.addAttribute("goods" , goods);
@@ -45,6 +51,7 @@ public class ShopController {
 
     @GetMapping(value = "/goodsByCategory/{id}")
     public String goodsByCategory(@PathVariable(name = "id")Long id , Model model){
+        model.addAttribute("basketSize"  , countGoodsInBasket());
         model.addAttribute("currentUser" , getUser());
         List<Categories> categories = goodsService.getCategories();
         model.addAttribute("categories" , categories);
@@ -61,6 +68,7 @@ public class ShopController {
 
     @GetMapping(value = "/details/{id}")
     public String detailsOfGood(@PathVariable(name = "id")Long id , Model model){
+        model.addAttribute("basketSize"  , countGoodsInBasket());
         model.addAttribute("currentUser" , getUser());
         Goods good = goodsService.getGood(id);
         if (good!=null){
@@ -72,12 +80,14 @@ public class ShopController {
 
     @GetMapping(value = "/login")
     public String login(Model model){
+        model.addAttribute("basketSize"  , countGoodsInBasket());
         model.addAttribute("currentUser" , getUser());
         return "login";
     }
 
     @GetMapping(value = "/search")
     public String search(@RequestParam(name = "name")String name , Model model){
+        model.addAttribute("basketSize"  , countGoodsInBasket());
         model.addAttribute("currentUser" , getUser());
         List<Categories> categories = goodsService.getCategories();
         model.addAttribute("categories" , categories);
@@ -88,14 +98,41 @@ public class ShopController {
 
     @GetMapping(value = "/403")
     public String accessDeniedPage(Model model){
+        model.addAttribute("basketSize"  , countGoodsInBasket());
         model.addAttribute("currentUser", getUser());
         return "403";
+    }
+
+    @PostMapping(value = "/addtobasket")
+    public String addToBasket(@RequestParam(name = "good_id")Long id , Model model){
+        model.addAttribute("basketSize"  , countGoodsInBasket());
+        Goods good = goodsService.getGood(id);
+        if (good!=null){
+            List<Goods> basket = (ArrayList<Goods>)session.getAttribute("BASKET");
+            if (basket==null){
+                basket = new ArrayList<>();
+            }
+            basket.add(good);
+            session.setAttribute("BASKET" , basket);
+            return "redirect:/details/"+id;
+        }
+        return "redirect:/";
+    }
+
+    @GetMapping(value = "/basketlist")
+    public String basketList(Model model){
+        model.addAttribute("basketSize"  , countGoodsInBasket());
+        model.addAttribute("currentUser" , getUser());
+        ArrayList<Goods> korzina = (ArrayList<Goods>) session.getAttribute("BASKET");
+        model.addAttribute("korzina" , korzina);
+        return "basketlist";
     }
 
 
 
     @GetMapping(value = "/register")
     public String register(Model model){
+        model.addAttribute("basketSize"  , countGoodsInBasket());
         model.addAttribute("currentUser" , getUser());
         List<Cities> cities = usersService.getAllCities();
         model.addAttribute("cities" , cities);
@@ -108,6 +145,7 @@ public class ShopController {
                              @RequestParam(name = "re_password")String rePassword,
                              @RequestParam(name = "fullName")String fullName ,
                              @RequestParam(name = "city_id")Long id , Model model){
+        model.addAttribute("basketSize"  , countGoodsInBasket());
         model.addAttribute("currentUser" , getUser());
         List<Cities> cities = usersService.getAllCities();
         model.addAttribute("cities" , cities);
@@ -131,6 +169,7 @@ public class ShopController {
     @GetMapping(value = "/profile")
     @PreAuthorize("isAuthenticated()")
     public String profile(Model model){
+        model.addAttribute("basketSize"  , countGoodsInBasket());
         model.addAttribute("currentUser" , getUser());
         List<Cities> cities = usersService.getAllCities();
         model.addAttribute("cities" , cities);
@@ -142,6 +181,8 @@ public class ShopController {
     public String updateProfile(Model model ,  @RequestParam(name = "fullName")String fullName,
                                 @RequestParam(name = "address")String address,
                                 @RequestParam(name = "city_id")Long id){
+        model.addAttribute("basketSize"  , countGoodsInBasket());
+
         model.addAttribute("currentUser" , getUser());
         Cities city = usersService.getCity(id);
         if (city!=null){
@@ -155,8 +196,6 @@ public class ShopController {
         }
     }
 
-
-
     private Users getUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)){
@@ -165,6 +204,14 @@ public class ShopController {
             return user;
         }
         return null;
+    }
+
+    private int countGoodsInBasket(){
+        ArrayList<Goods> basket = (ArrayList<Goods>) session.getAttribute("BASKET");
+        if (basket!=null){
+            return basket.size();
+        }
+        return 0;
     }
 
 }
