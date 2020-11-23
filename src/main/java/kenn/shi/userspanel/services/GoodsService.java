@@ -15,4 +15,8 @@ public interface GoodsService {
     List<Categories> getCategories();
     Categories getCategory(Long id);
     List<Goods> getAllByCategories(Categories categories);
+
+    Goods saveGood(Goods good);
+
+    List<Goods> searchGoods(String name , Double priceFrom , Double priceTo);
 }

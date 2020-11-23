@@ -6,6 +6,8 @@ import kenn.shi.userspanel.repositories.CategoriesRepository;
 import kenn.shi.userspanel.repositories.GoodsRepository;
 import kenn.shi.userspanel.services.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,5 +49,25 @@ public class GoodsServiceImplementation implements GoodsService {
     @Override
     public List<Goods> getAllByCategories(Categories categories) {
         return goodsRepository.findAllByCategories(categories);
+    }
+
+    @Override
+    public Goods saveGood(Goods good) {
+        return goodsRepository.save(good);
+    }
+
+    @Override
+    public List<Goods> searchGoods(String name, Double priceFrom, Double priceTo) {
+        Specification specification =(Specification<Goods>)(root , criteriaQuery , criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.upper(root.get("name")) , "%"+name.toUpperCase()+"%");
+
+        if(priceFrom!=null){
+            specification = specification.and((Specification<Goods>)(root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("price"), priceFrom));
+        }
+
+        if(priceTo!=null){
+            specification = specification.and((Specification<Goods>)(root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("price"), priceTo));
+        }
+
+        return goodsRepository.findAll(specification);
     }
 }

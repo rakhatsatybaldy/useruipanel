@@ -1,10 +1,8 @@
 package kenn.shi.userspanel.controllers;
 
 import kenn.shi.userspanel.entities.*;
-import kenn.shi.userspanel.repositories.RolesRepository;
 import kenn.shi.userspanel.services.GoodsService;
 import kenn.shi.userspanel.services.UsersService;
-import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -39,11 +37,16 @@ public class ShopController {
     private HttpSession session;
 
     @GetMapping(value = "/")
-    public String home(Model model){
+    public String home(Model model, @RequestParam(name = "name" , required = false , defaultValue = "")String name,
+                                    @RequestParam(name = "fromPrice" , required = false)Double fromPrice,
+                                    @RequestParam(name = "toPrice" , required = false)Double toPrice){
         model.addAttribute("basketSize"  , countGoodsInBasket());
         model.addAttribute("currentUser" , getUser());
-        List<Goods> goods = goodsService.getAllShopGoods();
+        List<Goods> goods = goodsService.searchGoods(name , fromPrice , toPrice);
         model.addAttribute("goods" , goods);
+        model.addAttribute("searchName", name!=null?name:"");
+        model.addAttribute("searchPriceFrom", fromPrice!=null?fromPrice:"");
+        model.addAttribute("searchPriceTo", toPrice!=null?toPrice:"");
         List<Categories> categories = goodsService.getCategories();
         model.addAttribute("categories" , categories);
         return "home";
@@ -119,14 +122,50 @@ public class ShopController {
         return "redirect:/";
     }
 
-    @PostMapping(value = "/deletegoodfrombasket")
-    public String deletegoodfrombasket(@RequestParam(name = "g_id")Long good_id){
+    @PostMapping(value = "/deletegood")
+    public String deletegoodfrombasket(@RequestParam(name = "good_id")Long good_id , Model model){
         Goods good = goodsService.getGood(good_id);
         if (good!=null){
             List<Goods> basket = (ArrayList<Goods>) session.getAttribute("BASKET");
-            basket.remove(good);
-            session.setAttribute("BASKET" , basket);
-            return "redirect:/basketlist#tableid";
+            for (int i=0;i<basket.size();i++){
+                basket.remove(i);
+            }
+            model.addAttribute("korzina" , basket);
+            return "redirect:/basketlist";
+        }
+        return "redirect:/";
+    }
+
+    @PostMapping(value = "/buygood")
+    @PreAuthorize("isAuthenticated()")
+    public String buyGood(@RequestParam(name = "good_id")Long id , Model model){
+        Goods good = goodsService.getGood(id);
+        if (good!=null){
+            List<Goods> goods = getUser().getGoods();
+            if (goods==null){
+                goods = new ArrayList<>();
+            }
+
+            goods.add(good);
+            if (good.getAmount()>0) {
+                if (getUser().getBalance() >= good.getPrice()) {
+
+                    getUser().setGoods(goods);
+                    double result = getUser().getBalance() - good.getPrice();
+                    getUser().setBalance(result);
+                    usersService.saveUser(getUser());
+                    int amountAfterPurchase = good.getAmount() - 1;
+                    good.setAmount(amountAfterPurchase);
+                    goodsService.saveGood(good);
+                    return "redirect:/basketlist?success";
+                }
+                else {
+                    return "redirect:/basketlist?error";
+                }
+            }
+                else {
+                    return "redirect:/basketlist?not";
+                }
         }
         return "redirect:/";
     }
@@ -139,6 +178,8 @@ public class ShopController {
         model.addAttribute("korzina" , korzina);
         return "basketlist";
     }
+
+
 
     @GetMapping(value = "/register")
     public String register(Model model){
@@ -175,6 +216,19 @@ public class ShopController {
             return "redirect:/register?error";
     }
 
+    @GetMapping(value = "/history")
+    @PreAuthorize("isAuthenticated()")
+    public String history(Model model){
+        model.addAttribute("basketSize"  , countGoodsInBasket());
+        List<Categories> categories = goodsService.getCategories();
+        model.addAttribute("categories" , categories);
+        model.addAttribute("currentUser" , getUser());
+        List<Goods> purchasedGoods = getUser().getGoods();
+        model.addAttribute("purchasedGoods", purchasedGoods);
+        return "history";
+
+    }
+
 
     @GetMapping(value = "/profile")
     @PreAuthorize("isAuthenticated()")
@@ -192,7 +246,6 @@ public class ShopController {
                                 @RequestParam(name = "address")String address,
                                 @RequestParam(name = "city_id")Long id){
         model.addAttribute("basketSize"  , countGoodsInBasket());
-
         model.addAttribute("currentUser" , getUser());
         Cities city = usersService.getCity(id);
         if (city!=null){
@@ -223,6 +276,5 @@ public class ShopController {
         }
         return 0;
     }
-
 }
 
