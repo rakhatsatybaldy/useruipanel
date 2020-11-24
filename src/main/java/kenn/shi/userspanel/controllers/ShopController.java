@@ -146,7 +146,7 @@ public class ShopController {
                 goods = new ArrayList<>();
             }
 
-            goods.add(good);
+
             if (good.getAmount()>0) {
                 if (getUser().getBalance() >= good.getPrice()) {
 
@@ -157,6 +157,7 @@ public class ShopController {
                     int amountAfterPurchase = good.getAmount() - 1;
                     good.setAmount(amountAfterPurchase);
                     goodsService.saveGood(good);
+                    goods.add(good);
                     return "redirect:/basketlist?success";
                 }
                 else {
