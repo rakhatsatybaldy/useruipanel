@@ -2,6 +2,7 @@ package kenn.shi.userspanel.services;
 
 import kenn.shi.userspanel.entities.Categories;
 import kenn.shi.userspanel.entities.Goods;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 

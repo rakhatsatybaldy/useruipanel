@@ -6,6 +6,9 @@ import kenn.shi.userspanel.repositories.CategoriesRepository;
 import kenn.shi.userspanel.repositories.GoodsRepository;
 import kenn.shi.userspanel.services.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -70,4 +73,6 @@ public class GoodsServiceImplementation implements GoodsService {
 
         return goodsRepository.findAll(specification);
     }
+
+
 }

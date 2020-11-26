@@ -26,7 +26,7 @@
             <table class="table table-striped" id="tableid">
                 <thead>
                 <tr>
-                    <th>ID </th>
+
                     <th>Название </th>
                     <th>Цена </th>
                     <th>Удалить </th>
@@ -35,7 +35,6 @@
                 </thead>
                 <tbody>
                 <tr th:each="g : ${korzina}">
-                    <td th:text="${g.id}"></td>
                     <td th:text="${g.name}"></td>
                     <td th:text="${g.price}"></td>
                     <td>

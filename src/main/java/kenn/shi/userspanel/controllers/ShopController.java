@@ -1,9 +1,12 @@
 package kenn.shi.userspanel.controllers;
 
 import kenn.shi.userspanel.entities.*;
+import kenn.shi.userspanel.repositories.GoodsRepository;
 import kenn.shi.userspanel.services.GoodsService;
 import kenn.shi.userspanel.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Controller
 public class ShopController {
@@ -36,10 +40,16 @@ public class ShopController {
     @Autowired
     private HttpSession session;
 
-    @GetMapping(value = "/")
-    public String home(Model model, @RequestParam(name = "name" , required = false , defaultValue = "")String name,
+    @Autowired
+    private GoodsRepository goodsRepository;
+
+    @GetMapping(value = "/filter")
+    public String filter(Model model, @RequestParam(name = "name" , required = false , defaultValue = "")String name,
                                     @RequestParam(name = "fromPrice" , required = false)Double fromPrice,
-                                    @RequestParam(name = "toPrice" , required = false)Double toPrice){
+                                    @RequestParam(name = "toPrice" , required = false)Double toPrice , @RequestParam(value = "page" , required = false ,defaultValue = "0")Integer page){
+        Page<Goods> pageGoods = goodsRepository.findAll(PageRequest.of(page , 6));
+        model.addAttribute("goodsPage" , pageGoods);
+        model.addAttribute("numbers" , IntStream.range(0 , pageGoods.getTotalPages()).toArray());
         model.addAttribute("basketSize"  , countGoodsInBasket());
         model.addAttribute("currentUser" , getUser());
         List<Goods> goods = goodsService.searchGoods(name , fromPrice , toPrice);
@@ -49,11 +59,29 @@ public class ShopController {
         model.addAttribute("searchPriceTo", toPrice!=null?toPrice:"");
         List<Categories> categories = goodsService.getCategories();
         model.addAttribute("categories" , categories);
+        return "filtering_goods";
+    }
+
+    @GetMapping( value = "/")
+    public String home(Model model ,
+                       @RequestParam(value = "page" , required = false ,defaultValue = "0")Integer page){
+        Page<Goods> pageGoods = goodsRepository.findAll(PageRequest.of(page , 6));
+        model.addAttribute("goodsPage" , pageGoods);
+        model.addAttribute("numbers" , IntStream.range(0 , pageGoods.getTotalPages()).toArray());
+        model.addAttribute("basketSize" , countGoodsInBasket());
+        model.addAttribute("currentUser" , getUser());
+        List<Categories> categories = goodsService.getCategories();
+        model.addAttribute("categories" , categories);
         return "home";
     }
 
+
+
     @GetMapping(value = "/goodsByCategory/{id}")
-    public String goodsByCategory(@PathVariable(name = "id")Long id , Model model){
+    public String goodsByCategory(@PathVariable(name = "id")Long id , Model model , @RequestParam(value = "page" , required = false ,defaultValue = "0")Integer page){
+        Page<Goods> pageGoods = goodsRepository.findAll(PageRequest.of(page , 6));
+        model.addAttribute("goodsPage" , pageGoods);
+        model.addAttribute("numbers" , IntStream.range(0 , pageGoods.getTotalPages()).toArray());
         model.addAttribute("basketSize"  , countGoodsInBasket());
         model.addAttribute("currentUser" , getUser());
         List<Categories> categories = goodsService.getCategories();
@@ -96,7 +124,7 @@ public class ShopController {
         model.addAttribute("categories" , categories);
         List<Goods> goods = goodsService.searchShopGoods(name);
         model.addAttribute("goods" , goods);
-        return "home";
+        return "filtering_goods";
     }
 
     @GetMapping(value = "/403")
@@ -105,6 +133,9 @@ public class ShopController {
         model.addAttribute("currentUser", getUser());
         return "403";
     }
+
+
+
 
     @PostMapping(value = "/addtobasket")
     public String addToBasket(@RequestParam(name = "good_id")Long id , Model model){
@@ -145,11 +176,9 @@ public class ShopController {
             if (goods==null){
                 goods = new ArrayList<>();
             }
-
-
             if (good.getAmount()>0) {
                 if (getUser().getBalance() >= good.getPrice()) {
-
+                    goods.add(good);
                     getUser().setGoods(goods);
                     double result = getUser().getBalance() - good.getPrice();
                     getUser().setBalance(result);
@@ -157,7 +186,7 @@ public class ShopController {
                     int amountAfterPurchase = good.getAmount() - 1;
                     good.setAmount(amountAfterPurchase);
                     goodsService.saveGood(good);
-                    goods.add(good);
+
                     return "redirect:/basketlist?success";
                 }
                 else {
@@ -259,6 +288,7 @@ public class ShopController {
             return "redirect:/profile?error";
         }
     }
+
 
     private Users getUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
