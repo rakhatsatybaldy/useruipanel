@@ -31,6 +31,16 @@
     </div>
 
 
+    <nav aria-label="Page navigation example">
+        <ul class="pagination" th:if="${goodsPage.totalPages>0}">
+            <li class="page-item disabled">
+                <a class="page-link" href="JavaScript:void(0)" tabindex="-1" aria-disabled="true">Страницы</a>
+            </li>
+            <li class="page-item" th:each="pageNumber : ${numbers}" th:classappend="${pageNumber==goodsPage.number} ? 'active'">
+                <a class="page-link" th:href="@{'/?page='+${pageNumber}}" th:text="${pageNumber + 1}"></a></li>
+        </ul>
+    </nav>
+
 
 </div>
 </html>
