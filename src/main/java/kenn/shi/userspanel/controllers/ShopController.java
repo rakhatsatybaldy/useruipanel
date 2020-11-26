@@ -46,10 +46,7 @@ public class ShopController {
     @GetMapping(value = "/filter")
     public String filter(Model model, @RequestParam(name = "name" , required = false , defaultValue = "")String name,
                                     @RequestParam(name = "fromPrice" , required = false)Double fromPrice,
-                                    @RequestParam(name = "toPrice" , required = false)Double toPrice , @RequestParam(value = "page" , required = false ,defaultValue = "0")Integer page){
-        Page<Goods> pageGoods = goodsRepository.findAll(PageRequest.of(page , 6));
-        model.addAttribute("goodsPage" , pageGoods);
-        model.addAttribute("numbers" , IntStream.range(0 , pageGoods.getTotalPages()).toArray());
+                                    @RequestParam(name = "toPrice" , required = false)Double toPrice ){
         model.addAttribute("basketSize"  , countGoodsInBasket());
         model.addAttribute("currentUser" , getUser());
         List<Goods> goods = goodsService.searchGoods(name , fromPrice , toPrice);
@@ -78,10 +75,7 @@ public class ShopController {
 
 
     @GetMapping(value = "/goodsByCategory/{id}")
-    public String goodsByCategory(@PathVariable(name = "id")Long id , Model model , @RequestParam(value = "page" , required = false ,defaultValue = "0")Integer page){
-        Page<Goods> pageGoods = goodsRepository.findAll(PageRequest.of(page , 6));
-        model.addAttribute("goodsPage" , pageGoods);
-        model.addAttribute("numbers" , IntStream.range(0 , pageGoods.getTotalPages()).toArray());
+    public String goodsByCategory(@PathVariable(name = "id")Long id , Model model ){
         model.addAttribute("basketSize"  , countGoodsInBasket());
         model.addAttribute("currentUser" , getUser());
         List<Categories> categories = goodsService.getCategories();
