@@ -189,6 +189,11 @@ public class ShopController {
                     int amountAfterPurchase = good.getAmount() - 1;
                     good.setAmount(amountAfterPurchase);
                     goodsService.saveGood(good);
+                    List<Goods> basket = (ArrayList<Goods>) session.getAttribute("BASKET");
+                    for (int i=0;i<basket.size();i++){
+                        basket.remove(i);
+                    }
+                    model.addAttribute("korzina" , basket);
 
                     return "redirect:/basketlist?success";
                 }
