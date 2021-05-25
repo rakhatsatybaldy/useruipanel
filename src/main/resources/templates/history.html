@@ -17,7 +17,7 @@
 
 
     <div class="card">
-        <h5 class="card-header">История покупок</h5>
+        <h5 class="card-header">Purchase history</h5>
         <div class="card-body" th:each="pg : ${purchasedGoods}">
             <h5 class="card-title" th:text="${pg!=null?pg.name:''}"></h5>
             <p class="card-text" th:text="${pg!=null?pg.price:''} + ' KZT'"></p>

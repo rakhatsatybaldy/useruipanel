@@ -20,10 +20,10 @@
                 <form th:action="@{'/filter'}" method="get">
                     <div class="row">
                         <div class="col-3">
-                            <label>Название</label>
+                            <label>Name</label>
                         </div>
                         <div class="col-4">
-                            <label>Цена</label>
+                            <label>Price</label>
                         </div>
                         <div class="col-4">
                         </div>
@@ -63,7 +63,7 @@
                     <div class="card-body">
                         <h5 class="card-title" th:text="${g.name}"></h5>
                         <p class="card-text" th:text="${g.price} + 'KZT'"></p>
-                        <a th:href="@{'/details/' + ${g.id}}" class="btn btn-primary">Подробнее...</a><br><br>
+                        <a th:href="@{'/details/' + ${g.id}}" class="btn btn-primary">More details...</a><br><br>
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination" th:if="${goodsPage.totalPages>0}">
             <li class="page-item disabled">
-                <a class="page-link" href="JavaScript:void(0)" tabindex="-1" aria-disabled="true">Страницы</a>
+                <a class="page-link" href="JavaScript:void(0)" tabindex="-1" aria-disabled="true">Pages</a>
             </li>
             <li class="page-item" th:each="pageNumber : ${numbers}" th:classappend="${pageNumber==goodsPage.number} ? 'active'">
                 <a class="page-link" th:href="@{'/?page='+${pageNumber}}" th:text="${pageNumber + 1}"></a></li>

@@ -6,19 +6,19 @@
     <div class="row mt-5">
         <div class="col-6 offset-3">
             <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${param.success!=null}">
-                <span>Пользователь зарегистрирован успешно!</span>
+                <span>Registered successfully!</span>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${param.passerror!=null}">
-                <span>Пароли не совпадают!</span>
+                <span>Passwords are not match!</span>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${param.error!=null}">
-                <span>Пользователь с таким именем уже существует!</span>
+                <span>User with this email already exists!</span>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -29,15 +29,15 @@
                     <input type="email" class="form-control" name="email">
                 </div>
                 <div class="form-group">
-                    <label>Пароль</label>
+                    <label>Password</label>
                     <input type="password" class="form-control" name="password">
                 </div>
                 <div class="form-group">
-                    <label>Подтвердите пароль</label>
+                    <label>Confirm password</label>
                     <input type="password" class="form-control" name="re_password">
                 </div>
                 <div class="form-group">
-                    <label>ФИО</label>
+                    <label>Fullname</label>
                     <input type="text" class="form-control" name="fullName">
                 </div>
                 <div class="form-group">
@@ -47,7 +47,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-success">Зарегистрироваться</button>
+                    <button class="btn btn-success">Sign up</button>
                 </div>
             </form>
         </div>

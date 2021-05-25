@@ -6,7 +6,7 @@
     <div class="row mt-5">
         <div class="col-6 offset-3">
             <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if = "${param.error!=null}">
-                <span>Неправильный адрес электронной почты или пароль!</span>
+                <span>Incorrect password or email!</span>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -17,14 +17,14 @@
                     <input type="email" class="form-control" name="u_email">
                 </div>
                 <div class="form-group">
-                    <label>Пароль</label>
+                    <label>Password</label>
                     <input type="password" class="form-control" name="u_password">
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-success">Войти</button>
+                    <button class="btn btn-success">Sign in</button>
                 </div>
             </form>
-            <p>Нет аккаунта? <a th:href="@{'/register'}">Регистрируйтесь здесь</a></p>
+            <p>Don't have an account? <a th:href="@{'/register'}">Register here</a></p>
         </div>
     </div>
 </div>

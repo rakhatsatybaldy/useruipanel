@@ -6,19 +6,19 @@
     <div class="row mt-5">
         <div class="col-6 offset-3">
             <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${param.success!=null}">
-                <span>Покупка прошла успешно!</span>
+                <span>Success bought!</span>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${param.error!=null}">
-                <span>У вас недостаточно средств... Пополните баланс!</span>
+                <span>You haven't enough balance... Check it!</span>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${param.not!=null}">
-                <span>Sorry! На данный момент в магазине нет этого товара.</span>
+                <span>Sorry! At the moment we do not have such a product</span>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -27,10 +27,10 @@
                 <thead>
                 <tr>
 
-                    <th>Название </th>
-                    <th>Цена </th>
-                    <th>Удалить </th>
-                    <th>Купить </th>
+                    <th>Name </th>
+                    <th>Price </th>
+                    <th>Delete </th>
+                    <th>Buy </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -40,13 +40,13 @@
                     <td>
                         <form th:action="@{'/deletegood'}" method="post">
                             <input type="hidden" name="good_id" th:value="${g.id}">
-                            <button class="btn btn-danger">Удалить</button>
+                            <button class="btn btn-danger">Delete</button>
                         </form>
                     </td>
                     <td>
                         <form th:action="@{'/buygood'}" method="post">
                             <input type="hidden" name="good_id" th:value="${g.id}">
-                            <button class="btn btn-primary">Купить </button>
+                            <button class="btn btn-primary">Buy </button>
                         </form>
                     </td>
                 </tr>

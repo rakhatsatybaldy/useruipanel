@@ -11,12 +11,12 @@
                 <div class="d-flex p-2 bd-highlight">
                 <img th:src="${currentgood.urlOfPicture}" class="rounded mx-auto d-block" width="30%" height="30%">
                 <div class="jumbotron ml-3">
-                    <p class="lead font-weight-bold" th:text="${currentgood.price} + 'KZT' + ' - В наличии '+ ${currentgood.amount} + ' штук'"></p>
+                    <p class="lead font-weight-bold" th:text="${currentgood.price} + 'KZT' + ' - In stock '+ ${currentgood.amount} + ' штук'"></p>
                     <hr class="my-4">
                     <p th:text="${currentgood.description}"></p>
                     <form th:action="@{'/addtobasket'}" method="post">
                         <input type="hidden" name="good_id" th:value="${currentgood.id}">
-                        <button class="btn btn-success"> + В корзину</button>
+                        <button class="btn btn-success"> + To Basket</button>
                     </form>
                 </div>
                 </div>
